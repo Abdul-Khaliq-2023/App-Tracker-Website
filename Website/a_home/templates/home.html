@@ -1,0 +1,107 @@
+{%load static%}
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" href="{% static 'home.css'%}">
+
+<body style="background-color: lightgrey;">
+    <div style="background-color: lightgrey;">
+        <p></p>
+    </div>
+
+    <!--code for navigation bar-->
+
+<nav>
+    <div id="nav1">
+        <h2>Hello Admin</h2> 
+    </div>
+</nav>
+
+    <!--code for various admin buttons-->
+
+<section>
+    <div class="button">
+        <button>Home</button>
+        <button>Add Apps</button>
+    </div>
+</section>
+
+    <!--code for textbox and dropdown-->
+
+<article>
+    <div class="container">
+        <div>
+            <img src="Website/a_home/static/Screenshot from 2023-12-03 15-57-15.png">
+        </div>
+        <div class="textbox-container">
+          <input type="text" id="inputData1" placeholder="App Name">
+          <input type="text" id="inputData2" placeholder="App Link">
+        </div>
+        <div class="dropdown-container">
+          <select name="dropdown1">
+            <option value="option1">Option 1</option>
+            <option value="option2">Option 2</option>
+          </select>
+          <select name="dropdown2">
+            <option value="option3">Option 3</option>
+            <option value="option4">Option 4</option>
+          </select>
+        </div>
+        <div class = "button-container">
+            <button id="myButton" onclick="convertToTextbox()">Add Points</button>
+        </div>
+    </div>
+</article>
+
+    <!--code for js button behavior-->
+
+<script>
+    function convertToTextbox() {
+      var button = document.getElementById('myButton');
+      var textBox = document.createElement('input');
+      textBox.setAttribute('type', 'text');
+      textBox.setAttribute('id', 'myTextbox');
+      
+      var newButton = document.createElement('button');
+      newButton.innerHTML = 'Submit';
+      newButton.setAttribute('onclick', 'alert("You clicked the new button!");');
+      
+      button.parentNode.replaceChild(textBox, button);
+      document.body.appendChild(newButton);
+    }
+</script>
+
+    <!--code for js request handling-->
+
+<script>
+    document.getElementById('dataForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const inputData = document.getElementById('inputData').value;
+    
+      fetch('/save-data/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': getCookie('csrftoken') // Ensure you have a CSRF token
+        },
+        body: 'inputData=' + encodeURIComponent(inputData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Data saved:', data);
+        // Handle success or show a message to the user
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        // Handle errors or show an error message to the user
+      });
+    });
+    
+    // Function to get CSRF token from cookies
+    function getCookie(name) {
+      const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+      return cookieValue ? cookieValue.pop() : '';
+    }
+    </script>
+
+</body>
+</html>
